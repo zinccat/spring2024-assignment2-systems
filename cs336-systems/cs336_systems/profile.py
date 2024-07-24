@@ -14,7 +14,6 @@ def profile(model, args, tokens):
     # Train the model
     # warm up
     if args.warm_up:
-        model.generate(tokens, max_new_tokens=1)
         loss = model(tokens).mean()
         loss.backward()
         model.zero_grad()
@@ -22,7 +21,7 @@ def profile(model, args, tokens):
     forward_times = []
     for _ in range(5):
         start = timeit.default_timer()
-        model.generate(tokens, max_new_tokens=1)
+        model(tokens)
         torch.cuda.synchronize()
         end = timeit.default_timer()
         forward_times.append(end - start)
